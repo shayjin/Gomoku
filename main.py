@@ -1,17 +1,14 @@
-from glob import glob
 import pygame, sys
-import time
-import numpy as numpy
 
-WIDTH = 1000
-HEIGHT = 600
+WIDTH = 800
+HEIGHT = 800
+
 background_color = (100,120,120)
 line_color = (0,0,0)
 line_width = 5
 O_color = (0,0,0)
 X_color = (255,255,255)
 win_color = (255,255,0)
-element_width = 10
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -43,13 +40,28 @@ def mark(row, col):
             draw(row, col)
             switch_turn()
             
+def set_circle_radius():
+    if WIDTH > HEIGHT:
+        circle_radius = HEIGHT / 10
+    else:
+        circle_radius = WIDTH / 10
+    return int(circle_radius)
+
+def set_element_width():
+    if WIDTH > HEIGHT:
+        element_width = HEIGHT / 60
+    else:
+        element_width = WIDTH / 60
+    return int(element_width)
+
 def draw(row, col):
     global turn
     if turn == 'O':
-        pygame.draw.circle(screen, O_color, (int(col * WIDTH/3 + WIDTH/6), int(row * HEIGHT/3 + HEIGHT/6)), 50, element_width)
+        pygame.draw.circle(screen, O_color, (int(col * WIDTH/3 + WIDTH/6), int(row * HEIGHT/3 + HEIGHT/6)), set_circle_radius(), element_width)
     else:
         pygame.draw.line(screen, X_color, (int(col * WIDTH/3 + WIDTH/12), int(row * HEIGHT/3+ HEIGHT/12)), (int(col* WIDTH/3 + WIDTH/4), int(row * HEIGHT/3 + HEIGHT/4)), element_width)
         pygame.draw.line(screen, X_color, (int(col * WIDTH/3 + WIDTH/12), int(row * HEIGHT/3 + HEIGHT/4)), (int(col* WIDTH/3 + WIDTH/4), int(row * HEIGHT/3 + HEIGHT/12)), element_width)
+
 def switch_turn():
     global turn
     if turn == 'X':
@@ -76,6 +88,13 @@ def is_win():
     
     return False
 
+def display_win_message(turn):
+    message = turn + ' wins! Click anywhere to restart...'
+    font_size = int(WIDTH/(len(message))*1.75) # size responsive lol
+    
+    font = pygame.font.Font('freesansbold.ttf', font_size)
+    text = font.render(message, True, (128,0,0), (0,0,128))
+    screen.blit(text, (WIDTH / 2 - WIDTH / 2.5 , HEIGHT / 2))
 
 def restart():
     global board
@@ -87,15 +106,10 @@ def restart():
             ['', '', ''], 
             ['', '', '']
         ]
-
+    
 draw_board()
-
 need_to_restart = False
-
-def display_win_message(turn):
-    font = pygame.font.Font('freesansbold.ttf', int(WIDTH/20))
-    text = font.render(turn + ' wins! Click anywhere to restart...', True, (128,0,0), (0,0,128))
-    screen.blit(text, (WIDTH / 2 - WIDTH / 2.4 , HEIGHT / 2))
+element_width = set_element_width()
 
 while True:
     for event in pygame.event.get():
@@ -106,11 +120,8 @@ while True:
             if not need_to_restart:
                 col = int(event.pos[0] / (WIDTH / 3))
                 row = int(event.pos[1] / (HEIGHT / 3))
-                print(row,col)
                 
                 mark(row, col)
-                print(board)
-                
                 win_shape = is_win()
                 
                 if win_shape:
