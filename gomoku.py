@@ -126,17 +126,17 @@ def display_win_message(turn):
 def display_main_menu():
     screen.fill(board_yor)
     
-    gomoku_font = pygame.font.Font('freesansbold.ttf', int(LENGTH/(len('Gomoku'))))
-    gomoku = gomoku_font.render('Gomoku', True, (128,0,0), (0,0,128))
-    screen.blit(gomoku, (LENGTH / 2 - LENGTH / 3, LENGTH / 7))
+    gomoku_font = pygame.font.Font('freesansbold.ttf', 50)
+    gomoku = gomoku_font.render('Python Gomoku', True, (128,85,33), (20,20,20))
+    screen.blit(gomoku, (LENGTH / 2 - LENGTH / 4, LENGTH / 7))
     
-    single_player_font = pygame.font.Font('freesansbold.ttf', int(LENGTH/(len('Singleplayer Mode'))))
-    single_player_mode = single_player_font.render('Singleplayer Mode', True, (128,0,0), (0,0,128))
-    screen.blit(single_player_mode, (LENGTH / 2 - LENGTH / 3.7 , LENGTH / 2))
+    single_player_font = pygame.font.Font('freesansbold.ttf', 30)
+    single_player_mode = single_player_font.render('Singleplayer Mode', True, (100,200,0), (0,50,120))
+    screen.blit(single_player_mode, (LENGTH / 2 - LENGTH / 5.5 , LENGTH / 2.2))
     
-    multi_player_font = pygame.font.Font('freesansbold.ttf', int(LENGTH/(len('Multiplayer Mode'))))
-    multi_player_mode = multi_player_font.render('Multiplayer Mode', True, (128,0,0), (0,0,128))
-    screen.blit(multi_player_mode, (LENGTH / 2 - LENGTH / 3.7 , LENGTH / 1.5))
+    multi_player_font = pygame.font.Font('freesansbold.ttf', 30)
+    multi_player_mode = multi_player_font.render('Play Against PC', True, (100,200,0), (0,50,120))
+    screen.blit(multi_player_mode, (LENGTH / 2 - LENGTH / 6.4 , LENGTH / 1.7))
     
 
     
@@ -152,13 +152,16 @@ while True:
         if event.type == pygame.QUIT:
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
+            x = event.pos[0]
+            y = event.pos[1]
+            print(x,y)
             if in_main_menu:
                 x = event.pos[0]
                 y = event.pos[1]
-                if x >= 175 and x < 580 and y > 385 and y < 430:
+                if x >= 175 and x < 453 and y > 380 and y < 410:
                     in_main_menu = False
                     create_board()
-                elif x >= 175 and x < 575 and y > 510 and y < 555:
+                elif x >= 175 and x < 410 and y > 510 and y < 535:
                     in_main_menu = False
                     multiplayer = True
                     create_board()
@@ -175,6 +178,8 @@ while True:
                             needs_to_restart = True
                     else:
                         needs_to_restart = False
+                        multiplayer = False
+                        in_main_menu = True
                         turn = 'Black'
                         display_main_menu()
                 else:
@@ -185,12 +190,13 @@ while True:
                         
                         if board[x][y] == 0:
                             move(x, y)
+                            pygame.display.update()
                             pc_x = random.randint(0,18)
                             pc_y = random.randint(0,18)
                             while board[pc_x][pc_y] != 0:
                                 pc_x = random.randint(0,18)
                                 pc_y = random.randint(0,18)
-                            
+                            time.sleep(0.5)
                             move(pc_x,pc_y)
                         
                         if (check_win(x, y)):
