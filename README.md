@@ -1,2 +1,2 @@
 # tictactoe
-lol
+Implemented Tic-tac-toe using pygame.
