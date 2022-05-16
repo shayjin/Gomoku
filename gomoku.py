@@ -1,4 +1,8 @@
-import pygame, sys, random, time
+from audioop import mul
+import pygame
+import sys
+import random
+import time
 
 LENGTH = 760
 
@@ -138,9 +142,19 @@ def display_main_menu():
     multi_player_mode = multi_player_font.render('Play Against PC', True, (100,200,0), (0,50,120))
     screen.blit(multi_player_mode, (LENGTH / 2 - LENGTH / 6.4 , LENGTH / 1.7))
     
+def reset():
+    global needs_to_restart
+    global multiplayer
+    global in_main_menu
+    global turn
+    
+    needs_to_restart = False
+    multiplayer = False
+    in_main_menu = True
+    turn = 'Black'
+    
+    display_main_menu()
 
-    
-    
 # main method
 in_main_menu = True
 multiplayer = False
@@ -151,54 +165,74 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            x = event.pos[0]
-            y = event.pos[1]
-            print(x,y)
+            
+        if event.type == pygame.MOUSEBUTTONDOWN:       
             if in_main_menu:
                 x = event.pos[0]
                 y = event.pos[1]
-                if x >= 175 and x < 453 and y > 380 and y < 410:
+                print(x, y)
+                if x >= 245 and x < 520 and y > 350 and y < 375:
                     in_main_menu = False
                     create_board()
-                elif x >= 175 and x < 410 and y > 510 and y < 535:
+                elif x >= 265 and x < 495 and y > 450 and y < 480:
                     in_main_menu = False
                     multiplayer = True
                     create_board()
             else:
                 if not multiplayer:
                     if not needs_to_restart:
+                        
                         x = int(((event.pos[0]) / 40))
                         y = int(((event.pos[1]) / 40))
-                        print(x, y)
+                        
                         move(x, y)
+                        
                         if (check_win(x, y)):
                             switch_turn()
                             display_win_message(turn)
                             needs_to_restart = True
                     else:
-                        needs_to_restart = False
-                        multiplayer = False
-                        in_main_menu = True
-                        turn = 'Black'
-                        display_main_menu()
+                       reset()
                 else:
                     if not needs_to_restart:
                         x = int(((event.pos[0]) / 40))
                         y = int(((event.pos[1]) / 40))
                         
-                        
                         if board[x][y] == 0:
                             move(x, y)
                             pygame.display.update()
-                            pc_x = random.randint(0,18)
-                            pc_y = random.randint(0,18)
-                            while board[pc_x][pc_y] != 0:
-                                pc_x = random.randint(0,18)
-                                pc_y = random.randint(0,18)
-                            time.sleep(0.5)
-                            move(pc_x,pc_y)
-                        
+                            
+                            rand = random.randint(0,1) # for randomness
+                            
+                            if rand == 1:
+                                pc_x = random.randint(x,x+1)
+                                pc_y = random.randint(y,y+1)
+                                while pc_x >= 19 or pc_y >= 19 or board[pc_x][pc_y] != 0:
+                                    
+                                    pc_x = random.randint(x,x+2)
+                                    pc_y = random.randint(y,y+2)
+                                    
+                                    if board[pc_x][pc_y] != 0:
+                                        pc_x = 20
+                                        pc_y = 20
+                                        
+                                time.sleep(0.5)
+                                move(pc_x,pc_y)
+                            else:
+                                pc_x = random.randint(x-1,x)
+                                pc_y = random.randint(y-1,y)
+                                while pc_x < 0 or pc_y < 0 or board[pc_x][pc_y] != 0:
+                                    
+                                    pc_x = random.randint(x-2,x)
+                                    pc_y = random.randint(y-2,y)
+                                    
+                                    if board[pc_x][pc_y] != 0:
+                                        pc_x = -1
+                                        pc_y = -1
+                                
+                                time.sleep(0.5)
+                                move(pc_x,pc_y)
+   
                         if (check_win(x, y)):
                             display_win_message("Black")
                             needs_to_restart = True
@@ -206,10 +240,7 @@ while True:
                             display_win_message("White")
                             needs_to_restart = True
                     else:
-                        needs_to_restart = False
-                        multiplayer = False
-                        in_main_menu = True
-                        turn = 'Black'
-                        display_main_menu()
+                        print('hi')
+                        reset()
                     
     pygame.display.update()
