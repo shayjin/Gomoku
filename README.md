@@ -1,2 +1,2 @@
 # tictactoe
-Implemented Tic-tac-toe using pygame.
+Implemented Gomoku in Python using PyGame.
