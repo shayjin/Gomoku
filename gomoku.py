@@ -13,12 +13,12 @@ offset = 20
 
 BLACK = (0,0,0)
 WHITE = (255,255,255)
-board_yor = (170,100,50)
+BOARD_COLOR = (222,185,135)
 
 pygame.init()
 screen = pygame.display.set_mode((LENGTH, LENGTH))
-pygame.display.set_caption("Gomoku")
-screen.fill(board_yor)
+pygame.display.set_caption("Python Gomoku")
+screen.fill(BOARD_COLOR)
 
 board = []
 turn = 'Black'
@@ -26,12 +26,13 @@ turn = 'Black'
 def create_board():
     global board
     board = []
+    
     for i in range(19):
         board.append([0]* 19)
         
     line = 0
     
-    screen.fill(board_yor)
+    screen.fill(BOARD_COLOR)
     while line < 19:
         pygame.draw.line(screen, line_yor, (line*offset*2+offset,offset), (line*offset*2+offset,LENGTH-offset), line_width) 
         pygame.draw.line(screen, line_yor, (offset, line*offset*2+offset), (LENGTH-offset, line*offset*2+offset), line_width) 
@@ -41,6 +42,20 @@ def create_board():
     pygame.draw.line(screen, line_yor, (offset, offset), (LENGTH-offset,offset), line_width) 
     pygame.draw.line(screen, line_yor, (LENGTH-offset,LENGTH-offset), (LENGTH-offset,offset), line_width) 
     pygame.draw.line(screen, line_yor, (LENGTH-offset,LENGTH-offset), (offset, LENGTH-offset), line_width)
+    SAM_CHUN_WON()
+
+# ??????: 꿀발라줘라
+# 조수현: ?
+def SAM_CHUN_WON():
+    pygame.draw.circle(screen, BLACK, (181,181),5,5)
+    pygame.draw.circle(screen, BLACK, (581,581),5,5)
+    pygame.draw.circle(screen, BLACK, (181,581),5,5)
+    pygame.draw.circle(screen, BLACK, (581,181),5,5)
+    pygame.draw.circle(screen, BLACK, (181,LENGTH/2),5,5)
+    pygame.draw.circle(screen, BLACK, (581,LENGTH/2),5,5)
+    pygame.draw.circle(screen, BLACK, (LENGTH/2,581),5,5)
+    pygame.draw.circle(screen, BLACK, (LENGTH/2,181),5,5)
+    pygame.draw.circle(screen, BLACK, (LENGTH/2,LENGTH/2),5,5)
     
 def switch_turn():
     global turn
@@ -128,7 +143,7 @@ def display_win_message(turn):
 
 # menu
 def display_main_menu():
-    screen.fill(board_yor)
+    screen.fill(BOARD_COLOR)
     
     gomoku_font = pygame.font.Font('freesansbold.ttf', 50)
     gomoku = gomoku_font.render('Python Gomoku', True, (128,85,33), (20,20,20))
