@@ -1,5 +1,5 @@
 # Gomoku
-Python Gomoku that has a single player mode to play against the PC and a multiplayer mode to play with a friend.
+Python Gomoku that has a single player mode to play against the PC (stupid) and a multiplayer mode to play with a friend.
 
 ## Tools
 - Python (PyGame)
